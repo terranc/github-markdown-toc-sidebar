@@ -1,0 +1,44 @@
+{
+  "extension_name": {
+    "message": "GitHub Markdown TOC Sidebar"
+  },
+  "extension_description": {
+    "message": "Automatically generates a table of contents sidebar for GitHub markdown files"
+  },
+  "options_title": {
+    "message": "GitHub Markdown TOC Settings"
+  },
+  "sidebar_position": {
+    "message": "Sidebar Position"
+  },
+  "position_left": {
+    "message": "Left"
+  },
+  "position_right": {
+    "message": "Right"
+  },
+  "heading_level": {
+    "message": "Heading Level"
+  },
+  "heading_level_hint": {
+    "message": "Select the maximum heading level to display in the table of contents"
+  },
+  "navigation": {
+    "message": "Navigation"
+  },
+  "close": {
+    "message": "Close"
+  },
+  "collapse_expand": {
+    "message": "Collapse/Expand"
+  },
+  "move_to_left": {
+    "message": "Move to left"
+  },
+  "move_to_right": {
+    "message": "Move to right"
+  },
+  "no_headers_found": {
+    "message": "No headers found"
+  }
+}

@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>GitHub Markdown TOC 设置</title>
+  <title data-i18n="options_title">GitHub Markdown TOC Settings</title>
   <link rel="stylesheet" href="options.css">
 </head>
 <body>
@@ -16,27 +16,27 @@
     </div>
 
     <div class="options-section">
-      <label class="options-label">侧边栏位置</label>
+      <label class="options-label" data-i18n="sidebar_position">Sidebar Position</label>
       <div class="options-radio-group">
         <label class="options-radio">
           <input type="radio" name="position" value="left">
           <span class="radio-icon">
             <svg viewBox="0 0 16 16" fill="currentColor"><path d="M1.5 2.5h3v11h-3a1 1 0 01-1-1v-9a1 1 0 011-1zm4.5 0h8.5a1 1 0 011 1v9a1 1 0 01-1 1H6z" opacity="0.15"/><path d="M1.5 2.5h3v11h-3a1 1 0 01-1-1v-9a1 1 0 011-1z"/></svg>
           </span>
-          <span>左侧</span>
+          <span data-i18n="position_left">Left</span>
         </label>
         <label class="options-radio">
           <input type="radio" name="position" value="right">
           <span class="radio-icon">
             <svg viewBox="0 0 16 16" fill="currentColor"><path d="M1 2.5h8.5v11H1a.5.5 0 01-.5-.5v-10a.5.5 0 01.5-.5zm10 0h3.5a.5.5 0 01.5.5v10a.5.5 0 01-.5.5H11z" opacity="0.15"/><path d="M11 2.5h3.5a.5.5 0 01.5.5v10a.5.5 0 01-.5.5H11z"/></svg>
           </span>
-          <span>右侧</span>
+          <span data-i18n="position_right">Right</span>
         </label>
       </div>
     </div>
 
     <div class="options-section">
-      <label class="options-label">标题层级</label>
+      <label class="options-label" data-i18n="heading_level">Heading Level</label>
       <div class="options-select-group">
         <select id="maxLevel" class="options-select">
           <option value="1">H1</option>
@@ -44,7 +44,7 @@
           <option value="3">H1 ~ H3</option>
           <option value="4">H1 ~ H4</option>
         </select>
-        <span class="options-hint">选择目录中显示的最大标题层级</span>
+        <span class="options-hint" data-i18n="heading_level_hint">Select the maximum heading level to display in the table of contents</span>
       </div>
     </div>
 

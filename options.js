@@ -4,6 +4,20 @@
   const STORAGE_KEY_POSITION = 'gmtoc_position';
   const STORAGE_KEY_MAX_LEVEL = 'gmtoc_max_level';
 
+  // Localize UI elements with data-i18n attributes
+  function localizeUI() {
+    document.querySelectorAll('[data-i18n]').forEach((el) => {
+      const key = el.getAttribute('data-i18n');
+      const message = chrome.i18n.getMessage(key);
+      if (message) {
+        el.textContent = message;
+      }
+    });
+  }
+
+  // Initialize localization
+  localizeUI();
+
   const radios = document.querySelectorAll('input[name="position"]');
   const maxLevelSelect = document.getElementById('maxLevel');
 

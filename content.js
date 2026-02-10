@@ -346,19 +346,21 @@
     if (settings.collapsed) sidebar.classList.add('gmtoc-collapsed');
 
     const positionIcon = settings.position === 'right' ? ICONS.panelLeft : ICONS.panelRight;
-    const positionTitle = settings.position === 'right' ? '移到左侧' : '移到右侧';
+    const positionTitle = settings.position === 'right'
+      ? chrome.i18n.getMessage('move_to_left')
+      : chrome.i18n.getMessage('move_to_right');
 
     sidebar.innerHTML = `
       <div class="gmtoc-header">
         <div class="gmtoc-header-left">
           <span class="gmtoc-icon">${ICONS.toc}</span>
-          <span class="gmtoc-title-text">导航</span>
+          <span class="gmtoc-title-text">${chrome.i18n.getMessage('navigation')}</span>
         </div>
         <div class="gmtoc-header-right">
           <button class="gmtoc-btn gmtoc-btn-position" title="${positionTitle}">
             ${positionIcon}
           </button>
-          <button class="gmtoc-btn gmtoc-btn-collapse" title="折叠/展开">
+          <button class="gmtoc-btn gmtoc-btn-collapse" title="${chrome.i18n.getMessage('collapse_expand')}">
             ${settings.collapsed ? ICONS.expand : ICONS.collapse}
           </button>
         </div>
@@ -452,9 +454,9 @@
       <div class="gmtoc-modal-header">
         <div class="gmtoc-modal-header-left">
           <span class="gmtoc-icon">${ICONS.toc}</span>
-          <span class="gmtoc-title-text">导航</span>
+          <span class="gmtoc-title-text">${chrome.i18n.getMessage('navigation')}</span>
         </div>
-        <button class="gmtoc-btn gmtoc-btn-collapse" title="关闭">
+        <button class="gmtoc-btn gmtoc-btn-collapse" title="${chrome.i18n.getMessage('close')}">
           ${ICONS.close}
         </button>
       </div>
@@ -502,7 +504,7 @@
     const normalized = normalizeHeaders(currentHeaders);
 
     if (normalized.length === 0) {
-      modalBodyEl.innerHTML = '<div class="gmtoc-empty">未找到标题</div>';
+      modalBodyEl.innerHTML = `<div class="gmtoc-empty">${chrome.i18n.getMessage('no_headers_found')}</div>`;
       return;
     }
 
@@ -538,7 +540,7 @@
     const normalized = normalizeHeaders(headers);
 
     if (normalized.length === 0) {
-      bodyEl.innerHTML = '<div class="gmtoc-empty">未找到标题</div>';
+      bodyEl.innerHTML = `<div class="gmtoc-empty">${chrome.i18n.getMessage('no_headers_found')}</div>`;
       return;
     }
 
