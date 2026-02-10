@@ -48,6 +48,38 @@
   }
 
   /**
+   * URL-based page filter: only show sidebar on pages where a TOC
+   * makes sense. Allowed pages:
+   *  - /owner/repo              (repo root README)
+   *  - /owner/repo/tree/xxx     (branch/tag root README)
+   *  - /owner/repo/blob/branch/path/file.md (.md file viewer)
+   *  - /owner/repo/wiki/**      (wiki pages)
+   */
+  function isAllowedPage() {
+    const path = window.location.pathname;
+    const segments = path.replace(/\/+$/, '').split('/').filter(Boolean);
+    console.log('[GMTOC DEBUG] isAllowedPage:', { path, segments, len: segments.length });
+
+    if (segments.length < 2) { console.log('[GMTOC DEBUG] rejected: < 2 segments'); return false; }
+
+    // Exactly 2 segments = repo root
+    if (segments.length === 2) return true;
+
+    const action = segments[2];
+
+    // .md file viewer
+    if (action === 'blob' && /\.md$/i.test(path)) return true;
+
+    // Branch/tag root (shows README)
+    if (action === 'tree') return true;
+
+    // Wiki pages
+    if (action === 'wiki') return true;
+
+    return false;
+  }
+
+  /**
    * Walk up from mdBody to find the best mount point for the wrapper.
    * If any ancestor between mdBody and <body> clips overflow, mount the
    * wrapper on that ancestor's parent so the sidebar is not clipped.
@@ -636,6 +668,12 @@
       removeSidebar();
     }
 
+    if (!isAllowedPage()) {
+      console.log('[GMTOC DEBUG] update() -> page not allowed, removing sidebar');
+      removeSidebar();
+      return;
+    }
+
     const mdBody = findMarkdownBody();
 
     if (!mdBody) {
@@ -645,7 +683,9 @@
 
     const headers = extractHeaders(mdBody);
 
-    if (headers.length === 0) {
+    // After normalization, a single-item TOC has no navigation value
+    const normalized = normalizeHeaders(headers);
+    if (normalized.length <= 1) {
       removeSidebar();
       return;
     }
@@ -673,7 +713,7 @@
     const mo = new MutationObserver(
       debounce(() => {
         const mdBody = findMarkdownBody();
-        if (mdBody) {
+        if (mdBody && isAllowedPage()) {
           if (!sidebarEl) {
             debouncedUpdate();
             return;
