@@ -4,7 +4,8 @@
 
 A Chrome extension that adds a floating table of contents sidebar to GitHub Markdown pages, making it easier to navigate long documentation.
 
-![Demo](https://user-images.githubusercontent.com/your-username/your-screenshot.png)
+![Demo](https://github.com/user-attachments/assets/572b0377-861a-498a-b5fc-e2f1498ce490)
+
 
 ## Features
 
