@@ -95,3 +95,7 @@
 - 灵感来源于在 GitHub 长文档中导航的需求
 - 图标使用 GitHub 的 Primer 设计系统
 - 感谢所有本扩展的贡献者和用户
+
+## Star 历史
+
+[![Star History Chart](https://api.star-history.com/svg?repos=terranc/github-markdown-toc-sidebar&type=Date)](https://star-history.com/#terranc/github-markdown-toc-sidebar&Date)

@@ -96,3 +96,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - Inspired by the need for better navigation on GitHub's long-form documentation
 - Icons use GitHub's Primer design system
 - Thanks to all contributors and users of this extension
+
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=terranc/github-markdown-toc-sidebar&type=Date)](https://star-history.com/#terranc/github-markdown-toc-sidebar&Date)
