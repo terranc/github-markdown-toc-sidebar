@@ -20,11 +20,16 @@
 
 ## 安装
 
-### 从 Chrome 应用商店安装（即将上线）
+### 从应用商店安装
+- [Chrome 应用商店](https://chromewebstore.google.com/) （审核中 ⏳）
+- [Microsoft Edge 插件中心](https://microsoftedge.microsoft.com/addons/) （审核中 ⏳）
 
-1. 访问 [Chrome 应用商店页面]()
-2. 点击"添加至 Chrome"
-3. 授予必要的权限
+### 手动安装 (GitHub Release)
+
+1. 前往 [Release 页面](../../releases) 下载最新的 `.crx` 文件。
+2. 打开 Chrome 或 Edge 浏览器，访问 `chrome://extensions` 或 `edge://extensions`。
+3. 在右上角开启 **开发者模式**。
+4. 将下载的 `.crx` 文件拖入扩展页面即可安装。
 
 ### 手动安装（开发者模式）
 

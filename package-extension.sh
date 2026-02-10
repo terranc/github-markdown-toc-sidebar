@@ -27,10 +27,12 @@ PROJECT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 BUILD_DIR="${PROJECT_DIR}/build"
 DIST_DIR="${PROJECT_DIR}/dist"
 
-# 清理旧构建
+# 清理旧构建 (保留 dist 目录以防误删密钥，只清空内容)
 echo -e "${BLUE}清理旧构建文件...${NC}"
-rm -rf "${BUILD_DIR}" "${DIST_DIR}"
+rm -rf "${BUILD_DIR}"
 mkdir -p "${BUILD_DIR}" "${DIST_DIR}"
+# 清除 dist 下的旧 zip 和 crx，但保留 pem 密钥（如果有）
+rm -f "${DIST_DIR}"/*.zip "${DIST_DIR}"/*.crx "${DIST_DIR}"/*.sha256
 
 # 需要包含的文件列表
 FILES=(
@@ -125,6 +127,47 @@ shasum -a 256 "${ZIP_NAME}" > "${ZIP_NAME}.sha256"
 cd "${PROJECT_DIR}"
 echo -e "  ${GREEN}✓${NC} SHA256 校验和已保存"
 
+# 生成 CRX (仅限 macOS 且安装了 Chrome)
+CHROME_PATH="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
+PEM_FILE="${PROJECT_DIR}/key.pem"
+
+if [ -x "$CHROME_PATH" ]; then
+    echo -e "${BLUE}尝试生成 CRX 文件...${NC}"
+
+    CRX_ARGS="--pack-extension=${BUILD_DIR}"
+
+    # 如果有密钥文件，使用它
+    if [ -f "$PEM_FILE" ]; then
+        echo -e "  使用现有密钥: ${PEM_FILE}"
+        CRX_ARGS="${CRX_ARGS} --pack-extension-key=${PEM_FILE}"
+    fi
+
+    # 调用 Chrome 打包
+    "$CHROME_PATH" ${CRX_ARGS} --no-message-box > /dev/null 2>&1
+
+    # 处理生成的文件
+    if [ -f "${PROJECT_DIR}/build.crx" ]; then
+        mv "${PROJECT_DIR}/build.crx" "${DIST_DIR}/github-markdown-toc-v${VERSION}.crx"
+        echo -e "  ${GREEN}✓${NC} CRX 文件已生成"
+
+        # 如果生成了新密钥（第一次打包），保存它
+        if [ -f "${PROJECT_DIR}/build.pem" ]; then
+            mv "${PROJECT_DIR}/build.pem" "$PEM_FILE"
+            echo -e "  ${GREEN}✓${NC} 新密钥已生成并保存到: ${PEM_FILE}"
+            echo -e "  ${YELLOW}⚠️  请妥善保管 key.pem 文件，后续更新版本需要使用它！${NC}"
+        fi
+
+        # 生成 CRX 的校验和
+        cd "${DIST_DIR}"
+        shasum -a 256 "github-markdown-toc-v${VERSION}.crx" > "github-markdown-toc-v${VERSION}.crx.sha256"
+        cd "${PROJECT_DIR}"
+    else
+        echo -e "  ${YELLOW}⚠ CRX 生成失败 (可能是权限问题或 Chrome 未响应)${NC}"
+    fi
+else
+    echo -e "  ${YELLOW}⚠ 未找到 Google Chrome，跳过 CRX 生成${NC}"
+fi
+
 # 汇总信息
 echo ""
 echo -e "${GREEN}========================================${NC}"
@@ -133,6 +176,9 @@ echo -e "${GREEN}========================================${NC}"
 echo ""
 echo -e "${BLUE}版本号:${NC} ${VERSION}"
 echo -e "${BLUE}ZIP 文件:${NC} ${DIST_DIR}/${ZIP_NAME}"
+if [ -f "${DIST_DIR}/github-markdown-toc-v${VERSION}.crx" ]; then
+    echo -e "${BLUE}CRX 文件:${NC} ${DIST_DIR}/github-markdown-toc-v${VERSION}.crx"
+fi
 echo -e "${BLUE}文件大小:${NC} $(du -h "${DIST_DIR}/${ZIP_NAME}" | cut -f1)"
 echo ""
 echo -e "${YELLOW}下一步:${NC}"

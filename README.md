@@ -21,11 +21,16 @@ A Chrome extension that adds a floating table of contents sidebar to GitHub Mark
 
 ## Installation
 
-### From Chrome Web Store (Coming Soon)
+### Install from Web Store
+- [Chrome Web Store](https://chromewebstore.google.com/) (Under Review ⏳)
+- [Microsoft Edge Add-ons](https://microsoftedge.microsoft.com/addons/) (Under Review ⏳)
 
-1. Visit the [Chrome Web Store page]()
-2. Click "Add to Chrome"
-3. Grant the necessary permissions
+### Manual Installation (GitHub Release)
+
+1. Go to the [Releases page](../../releases) and download the latest `.crx` file.
+2. Open Chrome/Edge and navigate to `chrome://extensions` or `edge://extensions`.
+3. Enable **Developer mode** in the top right corner.
+4. Drag and drop the downloaded `.crx` file into the extensions page to install.
 
 ### Manual Installation (Developer Mode)
 
