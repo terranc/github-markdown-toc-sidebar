@@ -265,7 +265,12 @@
     // When collapsed, clear inline width so CSS `width: auto` takes effect;
     // skip responsive-tier logic (the 32 px icon needs no tier adjustment).
     if (isCollapsed) {
-      sidebarEl.style.width = '';
+      // Ensure we don't carry over responsive classes (like mini-fab)
+      // that might force the wrong position (e.g. right: 12px)
+      sidebarEl.classList.remove('gmtoc-narrow', 'gmtoc-mini-fab');
+      // Fix: Must set explicit width (32px) so translateX(-100%) works correctly
+      // when inside the 0-width wrapper. 'auto' resolves to 0 width here.
+      sidebarEl.style.width = '32px';
     } else {
       applyResponsiveTier(sidebarEl, availableWidth);
     }
