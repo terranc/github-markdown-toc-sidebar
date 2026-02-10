@@ -1,0 +1,44 @@
+{
+  "extension_name": {
+    "message": "GitHub Markdown TOC Sidebar"
+  },
+  "extension_description": {
+    "message": "自动为 GitHub Markdown 文件生成目录侧边栏"
+  },
+  "options_title": {
+    "message": "GitHub Markdown TOC 设置"
+  },
+  "sidebar_position": {
+    "message": "侧边栏位置"
+  },
+  "position_left": {
+    "message": "左侧"
+  },
+  "position_right": {
+    "message": "右侧"
+  },
+  "heading_level": {
+    "message": "标题层级"
+  },
+  "heading_level_hint": {
+    "message": "选择目录中显示的最大标题层级"
+  },
+  "navigation": {
+    "message": "导航"
+  },
+  "close": {
+    "message": "关闭"
+  },
+  "collapse_expand": {
+    "message": "折叠/展开"
+  },
+  "move_to_left": {
+    "message": "移至左侧"
+  },
+  "move_to_right": {
+    "message": "移至右侧"
+  },
+  "no_headers_found": {
+    "message": "未找到标题"
+  }
+}
