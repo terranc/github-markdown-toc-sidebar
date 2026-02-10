@@ -2,9 +2,11 @@
   "manifest_version": 3,
   "name": "__MSG_extension_name__",
   "description": "__MSG_extension_description__",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "default_locale": "en",
-  "permissions": ["storage"],
+  "permissions": [
+    "storage"
+  ],
   "action": {
     "default_popup": "options.html",
     "default_icon": {
@@ -24,9 +26,15 @@
   },
   "content_scripts": [
     {
-      "matches": ["https://github.com/*"],
-      "css": ["content.css"],
-      "js": ["content.js"],
+      "matches": [
+        "https://github.com/*"
+      ],
+      "css": [
+        "content.css"
+      ],
+      "js": [
+        "content.js"
+      ],
       "run_at": "document_idle"
     }
   ]

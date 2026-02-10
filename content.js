@@ -249,7 +249,7 @@
       const anchorRect = anchor.getBoundingClientRect();
       const anchorHeight = anchor.offsetHeight;
       console.log('[GMTOC] anchor:', anchor.tagName, anchor.className.substring(0, 60), 'h:', anchorHeight, 'top:', Math.round(anchorRect.top), 'hostTop:', Math.round(hostRect.top));
-      // 防御：anchor 尚未完成布局时不写入异常值，等待后续 ResizeObserver 触发修正
+      // Defense: Don't write invalid values when anchor hasn't finished layout, let ResizeObserver fix it later
       if (anchorHeight > 0) {
         wrapperEl.style.top = (anchorRect.top - hostRect.top) + 'px';
         wrapperEl.style.height = anchorHeight + 'px';
@@ -342,7 +342,7 @@
       const stickyHeader = document.querySelector('#repos-sticky-header');
       if (stickyHeader) {
         resizeObserver.observe(stickyHeader);
-        // 同时观察 sticky header 的直接子 div，确保高度变化时更新位置
+        // Also observe sticky header's direct child div to update position when height changes
         const stickyDiv = stickyHeader.querySelector(':scope > div');
         if (stickyDiv) {
           resizeObserver.observe(stickyDiv);
@@ -350,7 +350,7 @@
       }
     }
 
-    // 观察 #repos-sticky-header 元素出现（GitHub 可能延迟渲染该元素）
+    // Watch for #repos-sticky-header element appearance (GitHub may render this element lazily)
     if (!document.querySelector('#repos-sticky-header')) {
       stickyHeaderObserver = new MutationObserver(() => {
         const stickyHeader = document.querySelector('#repos-sticky-header');
@@ -498,7 +498,7 @@
 
     chrome.storage.sync.set({ [STORAGE_KEY_COLLAPSED]: settings.collapsed });
 
-    // 等待 CSS 布局更新后重新计算位置（收起时宽度从全尺寸变为 32px）
+    // Recalculate position after CSS layout update (width changes from full to 32px when collapsed)
     requestAnimationFrame(() => positionSidebar());
   }
 
@@ -694,7 +694,7 @@
   /* ------------------------------------------------------------------ */
   function update() {
     console.log('[GMTOC] update() called');
-    // 检测 stale DOM 引用：SPA 导航后旧 sidebar 已不在 DOM 中
+    // Detect stale DOM reference: old sidebar no longer in DOM after SPA navigation
     if (sidebarEl && !sidebarEl.isConnected) {
       removeSidebar();
     }
@@ -829,7 +829,7 @@
     await loadSettings();
     update();
     setupNavigationListener();
-    // 兜底：等待浏览器完成首次布局后再次校正 sidebar 位置
+    // Fallback: Wait for browser to complete initial layout then re-correct sidebar position
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
         positionSidebar();
