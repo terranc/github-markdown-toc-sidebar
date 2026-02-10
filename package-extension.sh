@@ -120,12 +120,12 @@ else
     exit 1
 fi
 
-# 生成校验和
-echo -e "${BLUE}生成校验和...${NC}"
+# 生成 ZIP 校验和
+echo -e "${BLUE}生成 ZIP 校验和...${NC}"
 cd "${DIST_DIR}"
 shasum -a 256 "${ZIP_NAME}" > "${ZIP_NAME}.sha256"
 cd "${PROJECT_DIR}"
-echo -e "  ${GREEN}✓${NC} SHA256 校验和已保存"
+echo -e "  ${GREEN}✓${NC} ZIP SHA256 校验和已保存: ${DIST_DIR}/${ZIP_NAME}.sha256"
 
 # 生成 CRX (仅限 macOS 且安装了 Chrome)
 CHROME_PATH="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
@@ -183,6 +183,7 @@ if [ -x "$CHROME_PATH" ]; then
         cd "${DIST_DIR}"
         shasum -a 256 "github-markdown-toc-v${VERSION}.crx" > "github-markdown-toc-v${VERSION}.crx.sha256"
         cd "${PROJECT_DIR}"
+        echo -e "  ${GREEN}✓${NC} CRX SHA256 校验和已保存: ${DIST_DIR}/github-markdown-toc-v${VERSION}.crx.sha256"
     else
         echo -e "  ${YELLOW}⚠ CRX 生成失败 (可能是权限问题或 Chrome 未响应)${NC}"
     fi
