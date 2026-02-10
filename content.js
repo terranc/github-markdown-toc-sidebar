@@ -228,7 +228,12 @@
   }
 
   function positionSidebar() {
-    if (!sidebarEl || !wrapperEl || !currentMdBody || !mountHost) return;
+    if (!sidebarEl || !wrapperEl || !currentMdBody || !mountHost) {
+      console.log('[GMTOC] positionSidebar skip:', { s: !!sidebarEl, w: !!wrapperEl, m: !!currentMdBody, h: !!mountHost });
+      return;
+    }
+
+    console.log('[GMTOC] positionSidebar called, mdBody connected:', currentMdBody.isConnected, 'mountHost connected:', mountHost.isConnected);
 
     const defaultGap = 26;
     const stickyTop = getFixedHeaderHeight() + defaultGap;
@@ -242,8 +247,18 @@
     if (mountHost !== currentMdBody) {
       const anchor = findReadmeContainer(currentMdBody, mountHost) || currentMdBody;
       const anchorRect = anchor.getBoundingClientRect();
-      wrapperEl.style.top = (anchorRect.top - hostRect.top) + 'px';
-      wrapperEl.style.height = anchor.offsetHeight + 'px';
+      const anchorHeight = anchor.offsetHeight;
+      console.log('[GMTOC] anchor:', anchor.tagName, anchor.className.substring(0, 60), 'h:', anchorHeight, 'top:', Math.round(anchorRect.top), 'hostTop:', Math.round(hostRect.top));
+      // 防御：anchor 尚未完成布局时不写入异常值，等待后续 ResizeObserver 触发修正
+      if (anchorHeight > 0) {
+        wrapperEl.style.top = (anchorRect.top - hostRect.top) + 'px';
+        wrapperEl.style.height = anchorHeight + 'px';
+        wrapperEl.style.visibility = '';
+      } else {
+        return;
+      }
+    } else {
+      wrapperEl.style.visibility = '';
     }
 
     const layout = document.querySelector('.Layout');
@@ -259,6 +274,8 @@
     const availableWidth = settings.position === 'right'
       ? window.innerWidth - mdRect.right - effectiveGap * 2
       : mdRect.left - effectiveGap * 2;
+
+    console.log('[GMTOC] availableWidth:', Math.round(availableWidth), 'vpWidth:', window.innerWidth, 'mdRight:', Math.round(mdRect.right), 'gap:', effectiveGap);
 
     const isCollapsed = sidebarEl.classList.contains('gmtoc-collapsed');
 
@@ -307,12 +324,19 @@
     destroyPositionTracking();
 
     if (currentMdBody) {
-      resizeObserver = new ResizeObserver(debouncedPosition);
+      resizeObserver = new ResizeObserver(() => {
+        console.log('[GMTOC] ResizeObserver fired, mdBody connected:', currentMdBody.isConnected);
+        debouncedPosition();
+      });
       resizeObserver.observe(currentMdBody);
       resizeObserver.observe(document.documentElement);
 
       if (mountHost && mountHost !== currentMdBody) {
         resizeObserver.observe(mountHost);
+        const anchor = findReadmeContainer(currentMdBody, mountHost);
+        if (anchor && anchor !== mountHost && anchor !== currentMdBody) {
+          resizeObserver.observe(anchor);
+        }
       }
 
       const stickyHeader = document.querySelector('#repos-sticky-header');
@@ -377,6 +401,7 @@
 
     const wrapper = document.createElement('div');
     wrapper.id = WRAPPER_ID;
+    wrapper.style.visibility = 'hidden';
 
     const sidebar = document.createElement('div');
     sidebar.id = SIDEBAR_ID;
@@ -668,6 +693,7 @@
   /*  Main flow                                                          */
   /* ------------------------------------------------------------------ */
   function update() {
+    console.log('[GMTOC] update() called');
     // 检测 stale DOM 引用：SPA 导航后旧 sidebar 已不在 DOM 中
     if (sidebarEl && !sidebarEl.isConnected) {
       removeSidebar();
@@ -720,13 +746,17 @@
         const mdBody = findMarkdownBody();
         if (mdBody && isAllowedPage()) {
           if (!sidebarEl) {
+            console.log('[GMTOC] MO: no sidebar, triggering update');
             debouncedUpdate();
             return;
           }
           const newHeaders = extractHeaders(mdBody);
           const newSig = newHeaders.map((h) => `${h.level}:${h.id}`).join('|');
           const oldSig = currentHeaders.map((h) => `${h.level}:${h.id}`).join('|');
-          if (newSig !== oldSig) {
+          const mdBodyChanged = mdBody !== currentMdBody;
+          const sigChanged = newSig !== oldSig;
+          console.log('[GMTOC] MO: mdBodyChanged:', mdBodyChanged, 'sigChanged:', sigChanged);
+          if (sigChanged || mdBodyChanged) {
             debouncedUpdate();
           }
         } else if (sidebarEl) {
