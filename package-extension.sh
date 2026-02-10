@@ -129,7 +129,19 @@ echo -e "  ${GREEN}✓${NC} SHA256 校验和已保存"
 
 # 生成 CRX (仅限 macOS 且安装了 Chrome)
 CHROME_PATH="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
-PEM_FILE="${PROJECT_DIR}/key.pem"
+
+# 首先检查外部密钥文件路径（用于避免开发者模式警告）
+EXTERNAL_PEM="/Users/terranc/www/github-markdown-toc-sidebar-key.pem"
+# 回退到项目目录下的旧位置（向后兼容）
+LEGACY_PEM="${PROJECT_DIR}/key.pem"
+
+if [ -f "$EXTERNAL_PEM" ]; then
+    PEM_FILE="$EXTERNAL_PEM"
+elif [ -f "$LEGACY_PEM" ]; then
+    PEM_FILE="$LEGACY_PEM"
+else
+    PEM_FILE=""
+fi
 
 if [ -x "$CHROME_PATH" ]; then
     echo -e "${BLUE}尝试生成 CRX 文件...${NC}"
@@ -150,11 +162,21 @@ if [ -x "$CHROME_PATH" ]; then
         mv "${PROJECT_DIR}/build.crx" "${DIST_DIR}/github-markdown-toc-v${VERSION}.crx"
         echo -e "  ${GREEN}✓${NC} CRX 文件已生成"
 
-        # 如果生成了新密钥（第一次打包），保存它
+        # 如果生成了新密钥（第一次打包），保存到外部安全位置
         if [ -f "${PROJECT_DIR}/build.pem" ]; then
-            mv "${PROJECT_DIR}/build.pem" "$PEM_FILE"
-            echo -e "  ${GREEN}✓${NC} 新密钥已生成并保存到: ${PEM_FILE}"
-            echo -e "  ${YELLOW}⚠️  请妥善保管 key.pem 文件，后续更新版本需要使用它！${NC}"
+            # 优先保存到外部路径，避免开发者模式警告
+            EXTERNAL_PEM="/Users/terranc/www/github-markdown-toc-sidebar-key.pem"
+            if [ -d "$(dirname "$EXTERNAL_PEM")" ]; then
+                mv "${PROJECT_DIR}/build.pem" "$EXTERNAL_PEM"
+                echo -e "  ${GREEN}✓${NC} 新密钥已生成并保存到外部路径: ${EXTERNAL_PEM}"
+                echo -e "  ${YELLOW}⚠️  请妥善保管此密钥文件，后续更新版本需要使用它！${NC}"
+            else
+                # 回退：保存到项目目录（会有开发者模式警告）
+                mv "${PROJECT_DIR}/build.pem" "${PROJECT_DIR}/key.pem"
+                echo -e "  ${YELLOW}⚠${NC} 新密钥已保存到: ${PROJECT_DIR}/key.pem"
+                echo -e "  ${YELLOW}⚠️  注意：密钥在项目目录下会导致开发者模式警告。${NC}"
+                echo -e "  ${YELLOW}     建议将密钥移到外部安全位置。${NC}"
+            fi
         fi
 
         # 生成 CRX 的校验和
