@@ -1,0 +1,44 @@
+{
+  "extension_name": {
+    "message": "GitHub Markdown TOC Sidebar"
+  },
+  "extension_description": {
+    "message": "Автоматически создает боковую панель оглавления для Markdown-файлов на GitHub"
+  },
+  "options_title": {
+    "message": "Настройки GitHub Markdown TOC"
+  },
+  "sidebar_position": {
+    "message": "Положение боковой панели"
+  },
+  "position_left": {
+    "message": "Слева"
+  },
+  "position_right": {
+    "message": "Справа"
+  },
+  "heading_level": {
+    "message": "Уровень заголовка"
+  },
+  "heading_level_hint": {
+    "message": "Выберите максимальный уровень заголовка для отображения в оглавлении"
+  },
+  "navigation": {
+    "message": "Навигация"
+  },
+  "close": {
+    "message": "Закрыть"
+  },
+  "collapse_expand": {
+    "message": "Свернуть/Развернуть"
+  },
+  "move_to_left": {
+    "message": "Переместить влево"
+  },
+  "move_to_right": {
+    "message": "Переместить вправо"
+  },
+  "no_headers_found": {
+    "message": "Заголовки не найдены"
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "extension_name": {
+    "message": "GitHub Markdown TOC Sidebar"
+  },
+  "extension_description": {
+    "message": "GitHubのマークダウンファイルに自動的に目次サイドバーを生成します"
+  },
+  "options_title": {
+    "message": "GitHub Markdown TOC 設定"
+  },
+  "sidebar_position": {
+    "message": "サイドバーの位置"
+  },
+  "position_left": {
+    "message": "左"
+  },
+  "position_right": {
+    "message": "右"
+  },
+  "heading_level": {
+    "message": "見出しレベル"
+  },
+  "heading_level_hint": {
+    "message": "目次に表示する最大見出しレベルを選択してください"
+  },
+  "navigation": {
+    "message": "ナビゲーション"
+  },
+  "close": {
+    "message": "閉じる"
+  },
+  "collapse_expand": {
+    "message": "折りたたむ/展開"
+  },
+  "move_to_left": {
+    "message": "左に移動"
+  },
+  "move_to_right": {
+    "message": "右に移動"
+  },
+  "no_headers_found": {
+    "message": "見出しが見つかりません"
+  }
+}
