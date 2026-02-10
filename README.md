@@ -27,16 +27,17 @@ A Chrome extension that adds a floating table of contents sidebar to GitHub Mark
 
 ### Manual Installation (GitHub Release)
 
-1. Go to the [Releases page](../../releases) and download the latest `.crx` file.
-2. Open Chrome/Edge and navigate to `chrome://extensions` or `edge://extensions`.
-3. Enable **Developer mode** in the top right corner.
-4. Drag and drop the downloaded `.crx` file into the extensions page to install.
+1. Go to the [Releases page](../../releases) and download the latest `.zip` file (e.g., `github-markdown-toc-v1.0.0.zip`).
+2. **Unzip** the downloaded file to a new folder.
+3. Open Chrome/Edge and navigate to `chrome://extensions` or `edge://extensions`.
+4. Enable **Developer mode** in the top right corner.
+5. Click **Load unpacked** and select the unzipped folder.
 
 ### Manual Installation (Developer Mode)
 
 1. Download or clone this repository:
    ```bash
-   git clone https://github.com/your-username/github-markdown-toc-sidebar.git
+   git clone https://github.com/terranc/github-markdown-toc-sidebar.git
    ```
 
 2. Open Chrome and navigate to `chrome://extensions/`

@@ -26,16 +26,17 @@
 
 ### 手动安装 (GitHub Release)
 
-1. 前往 [Release 页面](../../releases) 下载最新的 `.crx` 文件。
-2. 打开 Chrome 或 Edge 浏览器，访问 `chrome://extensions` 或 `edge://extensions`。
-3. 在右上角开启 **开发者模式**。
-4. 将下载的 `.crx` 文件拖入扩展页面即可安装。
+1. 前往 [Release 页面](../../releases) 下载最新的 `.zip` 文件（例如 `github-markdown-toc-v1.0.0.zip`）。
+2. 将下载的文件 **解压** 到一个新的文件夹。
+3. 打开 Chrome 或 Edge 浏览器，访问 `chrome://extensions` 或 `edge://extensions`。
+4. 在右上角开启 **开发者模式**。
+5. 点击 **加载已解压的扩展程序** 并选择解压后的文件夹。
 
 ### 手动安装（开发者模式）
 
 1. 下载或克隆本仓库：
    ```bash
-   git clone https://github.com/your-username/github-markdown-toc-sidebar.git
+   git clone https://github.com/terranc/github-markdown-toc-sidebar.git
    ```
 
 2. 打开 Chrome 浏览器，访问 `chrome://extensions/`
