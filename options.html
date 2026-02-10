@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GitHub Markdown TOC 设置</title>
+  <link rel="stylesheet" href="options.css">
+</head>
+<body>
+  <div class="options-container">
+    <div class="options-header">
+      <svg class="options-logo" viewBox="0 0 16 16" fill="currentColor">
+        <path d="M2 3.5h12v1H2zm0 4h8v1H2zm0 4h10v1H2zm12-4h-1.5v1H14zm0 4h-1.5v1H14z"/>
+      </svg>
+      <h1>GitHub Markdown TOC</h1>
+    </div>
+
+    <div class="options-section">
+      <label class="options-label">侧边栏位置</label>
+      <div class="options-radio-group">
+        <label class="options-radio">
+          <input type="radio" name="position" value="left">
+          <span class="radio-icon">
+            <svg viewBox="0 0 16 16" fill="currentColor"><path d="M1.5 2.5h3v11h-3a1 1 0 01-1-1v-9a1 1 0 011-1zm4.5 0h8.5a1 1 0 011 1v9a1 1 0 01-1 1H6z" opacity="0.15"/><path d="M1.5 2.5h3v11h-3a1 1 0 01-1-1v-9a1 1 0 011-1z"/></svg>
+          </span>
+          <span>左侧</span>
+        </label>
+        <label class="options-radio">
+          <input type="radio" name="position" value="right">
+          <span class="radio-icon">
+            <svg viewBox="0 0 16 16" fill="currentColor"><path d="M1 2.5h8.5v11H1a.5.5 0 01-.5-.5v-10a.5.5 0 01.5-.5zm10 0h3.5a.5.5 0 01.5.5v10a.5.5 0 01-.5.5H11z" opacity="0.15"/><path d="M11 2.5h3.5a.5.5 0 01.5.5v10a.5.5 0 01-.5.5H11z"/></svg>
+          </span>
+          <span>右侧</span>
+        </label>
+      </div>
+    </div>
+
+    <div class="options-section">
+      <label class="options-label">标题层级</label>
+      <div class="options-select-group">
+        <select id="maxLevel" class="options-select">
+          <option value="1">H1</option>
+          <option value="2">H1 ~ H2</option>
+          <option value="3">H1 ~ H3</option>
+          <option value="4">H1 ~ H4</option>
+        </select>
+        <span class="options-hint">选择目录中显示的最大标题层级</span>
+      </div>
+    </div>
+
+    <div class="options-footer">
+      <span class="options-version">v1.0.0</span>
+    </div>
+  </div>
+
+  <script src="options.js"></script>
+</body>
+</html>

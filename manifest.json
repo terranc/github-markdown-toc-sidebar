@@ -1,0 +1,32 @@
+{
+  "manifest_version": 3,
+  "name": "GitHub Markdown TOC Sidebar",
+  "description": "在 GitHub 上查看 Markdown 文件时，自动提取标题生成目录，显示在内容区侧边栏。",
+  "version": "1.0.0",
+  "permissions": ["storage"],
+  "action": {
+    "default_popup": "options.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "options_ui": {
+    "page": "options.html",
+    "open_in_tab": false
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://github.com/*"],
+      "css": ["content.css"],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ]
+}
