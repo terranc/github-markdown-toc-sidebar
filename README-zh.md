@@ -4,7 +4,7 @@
 
 一个 Chrome 浏览器扩展，为 GitHub Markdown 页面添加浮动目录侧边栏，让长文档导航更加便捷。
 
-![演示](https://user-images.githubusercontent.com/your-username/your-screenshot.png)
+![Screenshot](https://github.com/user-attachments/assets/cf283fb2-4288-48ea-82c8-07ee92d2c450)
 
 ## 功能特性
 
