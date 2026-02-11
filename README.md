@@ -22,8 +22,8 @@ A Chrome extension that adds a floating table of contents sidebar to GitHub Mark
 ## Installation
 
 ### Install from Web Store
-- [Chrome Web Store](https://chromewebstore.google.com/) (Under Review ⏳)
-- [Microsoft Edge Add-ons](https://microsoftedge.microsoft.com/addons/) (Under Review ⏳)
+- [![Chrome Web Store](https://img.shields.io/chrome-web-store/v/cldigicecioffcfnmdbocifpgdhlenbd?style=flat-square&logo=googlechrome&logoColor=white&label=Chrome%20Web%20Store&color=4285F4)](https://chromewebstore.google.com/detail/cldigicecioffcfnmdbocifpgdhlenbd)
+- Microsoft Edge Add-ons (Coming Soon ⏳)
 
 ### Manual Installation (GitHub Release)
 

@@ -21,8 +21,8 @@
 ## 安装
 
 ### 从应用商店安装
-- [Chrome 应用商店](https://chromewebstore.google.com/) （审核中 ⏳）
-- [Microsoft Edge 插件中心](https://microsoftedge.microsoft.com/addons/) （审核中 ⏳）
+- [![Chrome Web Store](https://img.shields.io/chrome-web-store/v/cldigicecioffcfnmdbocifpgdhlenbd?style=flat-square&logo=googlechrome&logoColor=white&label=Chrome%20应用商店&color=4285F4)](https://chromewebstore.google.com/detail/cldigicecioffcfnmdbocifpgdhlenbd)
+- Microsoft Edge 插件中心 （即将上架 ⏳）
 
 ### 手动安装 (GitHub Release)
 
