@@ -15,8 +15,17 @@
     });
   }
 
+  function setVersionLabel() {
+    const versionEl = document.getElementById('optionsVersion');
+    if (!versionEl) return;
+    const manifest = chrome.runtime.getManifest();
+    const label = chrome.i18n.getMessage('version_label', manifest.version);
+    versionEl.textContent = label || manifest.version;
+  }
+
   // Initialize localization
   localizeUI();
+  setVersionLabel();
 
   const radios = document.querySelectorAll('input[name="position"]');
   const maxLevelSelect = document.getElementById('maxLevel');

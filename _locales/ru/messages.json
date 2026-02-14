@@ -40,5 +40,11 @@
   },
   "no_headers_found": {
     "message": "Заголовки не найдены"
+  },
+  "version_label": {
+    "message": "Версия $1"
+  },
+  "feedback": {
+    "message": "Обратная связь"
   }
 }

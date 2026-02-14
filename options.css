@@ -28,8 +28,8 @@ body {
 .options-logo {
   width: 20px;
   height: 20px;
-  color: #0969da;
   flex-shrink: 0;
+  display: block;
 }
 
 .options-header h1 {
@@ -139,9 +139,21 @@ body {
 }
 
 .options-footer {
-  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   padding-top: 14px;
   border-top: 1px solid #d8dee4;
+}
+
+.options-feedback {
+  font-size: 11px;
+  color: #0969da;
+  text-decoration: none;
+}
+
+.options-feedback:hover {
+  text-decoration: underline;
 }
 
 .options-version {

@@ -40,5 +40,11 @@
   },
   "no_headers_found": {
     "message": "No headers found"
+  },
+  "version_label": {
+    "message": "v$1"
+  },
+  "feedback": {
+    "message": "Feedback"
   }
 }

@@ -40,5 +40,11 @@
   },
   "no_headers_found": {
     "message": "未找到标题"
+  },
+  "version_label": {
+    "message": "版本 $1"
+  },
+  "feedback": {
+    "message": "反馈"
   }
 }

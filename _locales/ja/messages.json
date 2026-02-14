@@ -40,5 +40,11 @@
   },
   "no_headers_found": {
     "message": "見出しが見つかりません"
+  },
+  "version_label": {
+    "message": "バージョン $1"
+  },
+  "feedback": {
+    "message": "フィードバック"
   }
 }
