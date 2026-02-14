@@ -1,11 +1,19 @@
-# GitHub Markdown TOC Sidebar
+<div align="center">
 
-[English](README.md) | [中文](README-zh.md)
+<img src="icons/icon128.png" alt="GitHub Markdown TOC Sidebar" width="80" height="80">
+
+# GitHub Markdown TOC Sidebar
 
 A Chrome extension that adds a floating table of contents sidebar to GitHub Markdown pages, making it easier to navigate long documentation.
 
-![Demo](https://github.com/user-attachments/assets/fc27e51a-d04d-4d1a-b2d4-90fbef57a092)
+<p align="center">
+  <a href="README.md">English</a> •
+  <a href="README-zh.md">中文</a>
+</p>
 
+<img src="https://github.com/user-attachments/assets/fc27e51a-d04d-4d1a-b2d4-90fbef57a092" alt="Demo" width="80%">
+
+</div>
 
 ## Features
 

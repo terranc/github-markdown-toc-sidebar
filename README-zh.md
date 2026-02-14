@@ -1,10 +1,19 @@
-# GitHub Markdown 目录侧边栏
+<div align="center">
 
-[English](README.md) | [中文](README-zh.md)
+<img src="icons/icon128.png" alt="GitHub Markdown 目录侧边栏" width="80" height="80">
+
+# GitHub Markdown 目录侧边栏
 
 一个 Chrome 浏览器扩展，为 GitHub Markdown 页面添加浮动目录侧边栏，让长文档导航更加便捷。
 
-![Demo](https://github.com/user-attachments/assets/fc27e51a-d04d-4d1a-b2d4-90fbef57a092)
+<p align="center">
+  <a href="README.md">English</a> •
+  <a href="README-zh.md">中文</a>
+</p>
+
+<img src="https://github.com/user-attachments/assets/fc27e51a-d04d-4d1a-b2d4-90fbef57a092" alt="Demo" width="80%">
+
+</div>
 
 ## 功能特性
 
