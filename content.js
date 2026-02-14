@@ -24,6 +24,7 @@
   let mountHost = null; // element wrapper is appended to (may differ from currentMdBody)
   let resizeObserver = null;
   let stickyHeaderObserver = null;
+  let baseZIndex = 32;
   let activeId = null;
   let settings = { position: 'right', collapsed: false, maxLevel: 4 };
 
@@ -33,6 +34,32 @@
       clearTimeout(timer);
       timer = setTimeout(() => fn(...args), ms);
     };
+  }
+
+  function parseZIndex(value) {
+    const parsed = Number.parseInt(value, 10);
+    return Number.isFinite(parsed) ? parsed : null;
+  }
+
+  function computeSidebarZIndex() {
+    let target = baseZIndex;
+    const backdrop = document.querySelector('.dark-backdrop');
+    if (backdrop) {
+      const backdropZ = parseZIndex(window.getComputedStyle(backdrop).zIndex);
+      if (backdropZ !== null) {
+        target = Math.min(baseZIndex, backdropZ - 1);
+        if (!Number.isFinite(target)) target = baseZIndex;
+        if (target < 0) target = 0;
+      }
+    }
+    return target;
+  }
+
+  function applySidebarZIndex() {
+    if (!wrapperEl || !sidebarEl) return;
+    const target = computeSidebarZIndex();
+    wrapperEl.style.zIndex = String(target);
+    sidebarEl.style.zIndex = String(target);
   }
 
   function buildHeaderSelector() {
@@ -453,6 +480,8 @@
     wrapperEl = wrapper;
     sidebarEl = sidebar;
     bodyEl = sidebar.querySelector('.gmtoc-body');
+    baseZIndex = parseZIndex(window.getComputedStyle(wrapperEl).zIndex) ?? 32;
+    applySidebarZIndex();
 
     return sidebar;
   }
@@ -466,6 +495,7 @@
     bodyEl = null;
     currentMdBody = null;
     mountHost = null;
+    baseZIndex = 32;
     destroyModal();
     destroyObserver();
     destroyPositionTracking();
@@ -725,6 +755,7 @@
     currentMdBody = mdBody;
     createSidebar();
     renderTOC(headers);
+    applySidebarZIndex();
     setupObserver(headers);
     positionSidebar();
     setupPositionTracking();
@@ -745,6 +776,7 @@
       debounce(() => {
         const mdBody = findMarkdownBody();
         if (mdBody && isAllowedPage()) {
+          if (sidebarEl) applySidebarZIndex();
           if (!sidebarEl) {
             console.log('[GMTOC] MO: no sidebar, triggering update');
             debouncedUpdate();

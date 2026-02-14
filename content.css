@@ -5,13 +5,13 @@
   width: 0;
   overflow: visible;
   pointer-events: none;
-  z-index: 99999;
+  z-index: 32;
 }
 
 #gmtoc-sidebar {
   position: sticky;
   top: 26px;
-  z-index: 99999;
+  z-index: 32;
   width: 260px;
   max-height: calc(100vh - 80px);
   background: var(--bgColor-default, var(--color-canvas-default, #ffffff));
