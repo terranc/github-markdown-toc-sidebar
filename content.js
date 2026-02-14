@@ -613,6 +613,8 @@
         const target = document.getElementById(h.id);
         if (target) {
           target.scrollIntoView({ behavior: 'instant', block: 'start' });
+          // Offset for GitHub's sticky header (approx 65px)
+          window.scrollBy({ top: -65, behavior: 'instant' });
           history.replaceState(null, '', `#${h.id}`);
           setActive(h.id);
         }
@@ -648,6 +650,8 @@
         const target = document.getElementById(h.id);
         if (target) {
           target.scrollIntoView({ behavior: 'instant', block: 'start' });
+          // Offset for GitHub's sticky header (approx 65px)
+          window.scrollBy({ top: -65, behavior: 'instant' });
           history.replaceState(null, '', `#${h.id}`);
           setActive(h.id);
         }
