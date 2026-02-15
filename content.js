@@ -66,6 +66,10 @@
     return Array.from({ length: settings.maxLevel }, (_, i) => `h${i + 1}`).join(', ');
   }
 
+  function getPathSegments() {
+    return window.location.pathname.replace(/\/+$/, '').split('/').filter(Boolean);
+  }
+
   function findMarkdownBody() {
     for (const sel of MARKDOWN_SELECTORS) {
       const el = document.querySelector(sel);
@@ -84,7 +88,7 @@
    */
   function isAllowedPage() {
     const path = window.location.pathname;
-    const segments = path.replace(/\/+$/, '').split('/').filter(Boolean);
+    const segments = getPathSegments();
     console.log('[GMTOC DEBUG] isAllowedPage:', { path, segments, len: segments.length });
 
     if (segments.length < 2) { console.log('[GMTOC DEBUG] rejected: < 2 segments'); return false; }
@@ -104,6 +108,13 @@
     if (action === 'wiki') return true;
 
     return false;
+  }
+
+  function isBlobMarkdownPage() {
+    const segments = getPathSegments();
+    if (segments.length < 3) return false;
+    if (segments[2] !== 'blob') return false;
+    return /\.md$/i.test(window.location.pathname);
   }
 
   /**
@@ -213,11 +224,48 @@
   /* ------------------------------------------------------------------ */
   /*  Sidebar positioning relative to .markdown-body                     */
   /* ------------------------------------------------------------------ */
-  const FALLBACK_STICKY_HEIGHT = 224; // 兜底值：224 + gap(26) = 250px 距顶距离
+  const FALLBACK_STICKY_HEIGHT = 224; // Fallback: 224 + gap(26) = 250px from top
+  const STICKY_TOP_GAP = 17;
+  const OVERVIEW_BOX_SELECTOR = '[class^="OverviewRepoFiles-module__Box"], [class*=" OverviewRepoFiles-module__Box"]';
 
-  function getFixedHeaderHeight() {
-    const stickyHeader = document.querySelector('#repos-sticky-header > div');
-    if (stickyHeader) return stickyHeader.getBoundingClientRect().height;
+  function getOverviewStickyBox() {
+    const candidates = Array.from(document.querySelectorAll(OVERVIEW_BOX_SELECTOR));
+    if (candidates.length === 0) return null;
+
+    const metrics = candidates.map((el) => {
+      const rect = el.getBoundingClientRect();
+      const cs = window.getComputedStyle(el);
+      return { el, height: rect.height, position: cs.position };
+    });
+
+    const sticky = metrics.find((item) => item.position === 'sticky' || item.position === 'fixed');
+    if (sticky) return sticky.el;
+
+    const reasonable = metrics.filter((item) => item.height >= 24 && item.height <= 200);
+    if (reasonable.length > 0) {
+      reasonable.sort((a, b) => a.height - b.height);
+      return reasonable[0].el;
+    }
+
+    const nonZero = metrics.filter((item) => item.height > 0);
+    if (nonZero.length > 0) {
+      nonZero.sort((a, b) => a.height - b.height);
+      return nonZero[0].el;
+    }
+
+    return candidates[0];
+  }
+
+  function getStickyOffsetElement() {
+    if (isBlobMarkdownPage()) {
+      return document.querySelector('#repos-sticky-header > div');
+    }
+    return getOverviewStickyBox();
+  }
+
+  function getStickyTopOffset() {
+    const stickyEl = getStickyOffsetElement();
+    if (stickyEl) return stickyEl.getBoundingClientRect().height + STICKY_TOP_GAP;
 
     let maxBottom = 0;
     document.querySelectorAll('header, nav').forEach((el) => {
@@ -229,7 +277,16 @@
         }
       }
     });
-    return maxBottom;
+    return maxBottom + STICKY_TOP_GAP;
+  }
+
+  function observeStickyTargets(observer) {
+    if (!observer) return false;
+    const stickyEl = getStickyOffsetElement();
+    if (!stickyEl) return false;
+    observer.observe(stickyEl);
+    if (stickyEl.parentElement) observer.observe(stickyEl.parentElement);
+    return true;
   }
 
   const TIER_FULL = 260;
@@ -263,7 +320,7 @@
     console.log('[GMTOC] positionSidebar called, mdBody connected:', currentMdBody.isConnected, 'mountHost connected:', mountHost.isConnected);
 
     const defaultGap = 26;
-    const stickyTop = getFixedHeaderHeight() + defaultGap;
+    const stickyTop = getStickyTopOffset();
     sidebarEl.style.top = stickyTop + 'px';
 
     const mdRect = currentMdBody.getBoundingClientRect();
@@ -366,27 +423,17 @@
         }
       }
 
-      const stickyHeader = document.querySelector('#repos-sticky-header');
-      if (stickyHeader) {
-        resizeObserver.observe(stickyHeader);
-        // Also observe sticky header's direct child div to update position when height changes
-        const stickyDiv = stickyHeader.querySelector(':scope > div');
-        if (stickyDiv) {
-          resizeObserver.observe(stickyDiv);
-        }
+      const hasStickyTarget = observeStickyTargets(resizeObserver);
+      if (!hasStickyTarget) {
+        console.log('[GMTOC] sticky target not found yet, waiting for DOM update');
       }
     }
 
-    // Watch for #repos-sticky-header element appearance (GitHub may render this element lazily)
-    if (!document.querySelector('#repos-sticky-header')) {
+    // Watch for sticky element appearance (GitHub may render this element lazily)
+    if (!getStickyOffsetElement()) {
       stickyHeaderObserver = new MutationObserver(() => {
-        const stickyHeader = document.querySelector('#repos-sticky-header');
-        if (stickyHeader) {
-          if (resizeObserver) {
-            resizeObserver.observe(stickyHeader);
-            const stickyDiv = stickyHeader.querySelector(':scope > div');
-            if (stickyDiv) resizeObserver.observe(stickyDiv);
-          }
+        const didObserve = observeStickyTargets(resizeObserver);
+        if (didObserve) {
           debouncedPosition();
           if (stickyHeaderObserver) {
             stickyHeaderObserver.disconnect();
@@ -613,8 +660,10 @@
         const target = document.getElementById(h.id);
         if (target) {
           target.scrollIntoView({ behavior: 'instant', block: 'start' });
-          // Offset for GitHub's sticky header (approx 65px)
-          window.scrollBy({ top: -65, behavior: 'instant' });
+          const offset = getStickyTopOffset();
+          if (offset) {
+            window.scrollBy({ top: -offset, behavior: 'instant' });
+          }
           history.replaceState(null, '', `#${h.id}`);
           setActive(h.id);
         }
@@ -650,8 +699,10 @@
         const target = document.getElementById(h.id);
         if (target) {
           target.scrollIntoView({ behavior: 'instant', block: 'start' });
-          // Offset for GitHub's sticky header (approx 65px)
-          window.scrollBy({ top: -65, behavior: 'instant' });
+          const offset = getStickyTopOffset();
+          if (offset) {
+            window.scrollBy({ top: -offset, behavior: 'instant' });
+          }
           history.replaceState(null, '', `#${h.id}`);
           setActive(h.id);
         }
@@ -701,7 +752,7 @@
   function updateActiveHeader() {
     if (currentHeaders.length === 0) return;
 
-    const offset = 80;
+    const offset = Math.max(20, getStickyTopOffset());
     let active = currentHeaders[0];
 
     for (const h of currentHeaders) {
