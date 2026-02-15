@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.3.3] - 2026-02-15
+
+### Fixed
+- Refined sticky offset calculation logic for improved heading positioning accuracy
+
 ## [1.3.2] - 2026-02-14
 
 ### Fixed
