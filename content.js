@@ -752,7 +752,9 @@
   function updateActiveHeader() {
     if (currentHeaders.length === 0) return;
 
-    const offset = Math.max(20, getStickyTopOffset());
+    // Add 2px tolerance for floating-point precision issues
+    // (scrollIntoView + scrollBy may result in rect.top being slightly > offset)
+    const offset = Math.max(20, getStickyTopOffset()) + 2;
     let active = currentHeaders[0];
 
     for (const h of currentHeaders) {
