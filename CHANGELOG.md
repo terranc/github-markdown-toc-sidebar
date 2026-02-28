@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.3.5] - 2026-02-28
+
+### Fixed
+- Position sidebar relative to parent container instead of markdown-body element
+- Fix sidebar overlap issue with markdown content on GitHub pages
+- Remove dependency on unstable `.Layout` and `.Layout-main` CSS classes
+- Calculate sidebar position based on markdown-body's parent container edges for consistent positioning
+
 ## [1.3.4] - 2026-02-22
 
 ### Fixed
