@@ -124,11 +124,8 @@
    * Falls back to mdBody itself when no clipping ancestor exists.
    */
   function findMountHost(mdBody) {
-    const layoutMain = document.querySelector('.Layout-main');
-    if (layoutMain && layoutMain.contains(mdBody)) {
-      return layoutMain;
-    }
-
+    // Find stable mount point: prefer markdown-body's direct parent container
+    // This avoids relying on class names that might change with GitHub's UI updates
     let el = mdBody.parentElement;
     while (el && el !== document.body) {
       const cs = window.getComputedStyle(el);
@@ -138,6 +135,11 @@
       if (isClipping && el.parentElement) {
         return el.parentElement;
       }
+
+      if (el.tagName === 'DIV' && el.children.length > 0) {
+        return el;
+      }
+
       el = el.parentElement;
     }
     return mdBody;
@@ -323,10 +325,17 @@
     const stickyTop = getStickyTopOffset();
     sidebarEl.style.top = stickyTop + 'px';
 
-    const mdRect = currentMdBody.getBoundingClientRect();
+    // Position sidebar relative to markdown-body's parent container, not markdown-body itself
+    const mdParent = currentMdBody.parentElement;
+    if (!mdParent) {
+      console.log('[GMTOC] No parent element found for markdown-body');
+      return;
+    }
+
+    const parentRect = mdParent.getBoundingClientRect();
     const hostRect = mountHost.getBoundingClientRect();
-    const mdOffsetLeft = mdRect.left - hostRect.left;
-    const mdWidth = currentMdBody.offsetWidth;
+    const parentOffsetLeft = parentRect.left - hostRect.left;
+    const parentWidth = mdParent.offsetWidth;
 
     if (mountHost !== currentMdBody) {
       const anchor = findReadmeContainer(currentMdBody, mountHost) || currentMdBody;
@@ -345,32 +354,20 @@
       wrapperEl.style.visibility = '';
     }
 
-    const layout = document.querySelector('.Layout');
-    const layoutMain = document.querySelector('.Layout-main');
-    let layoutGap = 0;
-    const hasLayout = layout && layoutMain;
-    if (hasLayout) {
-      layoutGap = parseFloat(getComputedStyle(layout).columnGap) || defaultGap;
-    }
+    // Use fixed gap - sidebar positioned outside parent container
+    const effectiveGap = defaultGap;
 
-    const effectiveGap = hasLayout ? layoutGap : defaultGap;
-
+    // Calculate available width based on parent container edges
     const availableWidth = settings.position === 'right'
-      ? window.innerWidth - mdRect.right - effectiveGap * 2
-      : mdRect.left - effectiveGap * 2;
+      ? window.innerWidth - parentRect.right - effectiveGap * 2
+      : parentRect.left - effectiveGap * 2;
 
-    console.log('[GMTOC] availableWidth:', Math.round(availableWidth), 'vpWidth:', window.innerWidth, 'mdRight:', Math.round(mdRect.right), 'gap:', effectiveGap);
+    console.log('[GMTOC] availableWidth:', Math.round(availableWidth), 'vpWidth:', window.innerWidth, 'parentRight:', Math.round(parentRect.right), 'parentLeft:', Math.round(parentRect.left), 'gap:', effectiveGap);
 
     const isCollapsed = sidebarEl.classList.contains('gmtoc-collapsed');
 
-    // When collapsed, clear inline width so CSS `width: auto` takes effect;
-    // skip responsive-tier logic (the 32 px icon needs no tier adjustment).
     if (isCollapsed) {
-      // Ensure we don't carry over responsive classes (like mini-fab)
-      // that might force the wrong position (e.g. right: 12px)
       sidebarEl.classList.remove('gmtoc-narrow', 'gmtoc-mini-fab');
-      // Fix: Must set explicit width (32px) so translateX(-100%) works correctly
-      // when inside the 0-width wrapper. 'auto' resolves to 0 width here.
       sidebarEl.style.width = '32px';
     } else {
       applyResponsiveTier(sidebarEl, availableWidth);
@@ -384,20 +381,12 @@
 
       if (settings.position === 'right') {
         sidebarEl.style.transform = '';
-        if (hasLayout) {
-          const mainRect = layoutMain.getBoundingClientRect();
-          wrapperEl.style.left = (mainRect.right - hostRect.left + layoutGap) + 'px';
-        } else {
-          wrapperEl.style.left = (mdOffsetLeft + mdWidth + effectiveGap) + 'px';
-        }
+        // Position sidebar outside parent container's right edge
+        wrapperEl.style.left = (parentOffsetLeft + parentWidth + effectiveGap) + 'px';
       } else {
         sidebarEl.style.transform = 'translateX(-100%)';
-        if (hasLayout) {
-          const mainRect = layoutMain.getBoundingClientRect();
-          wrapperEl.style.left = (mainRect.left - hostRect.left - layoutGap) + 'px';
-        } else {
-          wrapperEl.style.left = (mdOffsetLeft - effectiveGap) + 'px';
-        }
+        // Position sidebar outside parent container's left edge
+        wrapperEl.style.left = (parentOffsetLeft - effectiveGap) + 'px';
       }
     }
   }
