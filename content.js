@@ -325,17 +325,20 @@
     const stickyTop = getStickyTopOffset();
     sidebarEl.style.top = stickyTop + 'px';
 
-    // Position sidebar relative to markdown-body's parent container, not markdown-body itself
-    const mdParent = currentMdBody.parentElement;
-    if (!mdParent) {
-      console.log('[GMTOC] No parent element found for markdown-body');
+    // For .md file pages, use markdown-body directly as container
+    // For repo home pages, use markdown-body's parent container
+    const isBlobPage = isBlobMarkdownPage();
+    const containerEl = isBlobPage ? currentMdBody : currentMdBody.parentElement;
+
+    if (!containerEl) {
+      console.log('[GMTOC] No container element found');
       return;
     }
 
-    const parentRect = mdParent.getBoundingClientRect();
+    const containerRect = containerEl.getBoundingClientRect();
     const hostRect = mountHost.getBoundingClientRect();
-    const parentOffsetLeft = parentRect.left - hostRect.left;
-    const parentWidth = mdParent.offsetWidth;
+    const containerOffsetLeft = containerRect.left - hostRect.left;
+    const containerWidth = containerEl.offsetWidth;
 
     if (mountHost !== currentMdBody) {
       const anchor = findReadmeContainer(currentMdBody, mountHost) || currentMdBody;
@@ -354,15 +357,15 @@
       wrapperEl.style.visibility = '';
     }
 
-    // Use fixed gap - sidebar positioned outside parent container
+    // Use fixed gap - sidebar positioned outside container
     const effectiveGap = defaultGap;
 
-    // Calculate available width based on parent container edges
+    // Calculate available width based on container edges
     const availableWidth = settings.position === 'right'
-      ? window.innerWidth - parentRect.right - effectiveGap * 2
-      : parentRect.left - effectiveGap * 2;
+      ? window.innerWidth - containerRect.right - effectiveGap * 2
+      : containerRect.left - effectiveGap * 2;
 
-    console.log('[GMTOC] availableWidth:', Math.round(availableWidth), 'vpWidth:', window.innerWidth, 'parentRight:', Math.round(parentRect.right), 'parentLeft:', Math.round(parentRect.left), 'gap:', effectiveGap);
+    console.log('[GMTOC] availableWidth:', Math.round(availableWidth), 'vpWidth:', window.innerWidth, 'containerRight:', Math.round(containerRect.right), 'containerLeft:', Math.round(containerRect.left), 'gap:', effectiveGap, 'isBlobPage:', isBlobPage);
 
     const isCollapsed = sidebarEl.classList.contains('gmtoc-collapsed');
 
@@ -381,12 +384,12 @@
 
       if (settings.position === 'right') {
         sidebarEl.style.transform = '';
-        // Position sidebar outside parent container's right edge
-        wrapperEl.style.left = (parentOffsetLeft + parentWidth + effectiveGap) + 'px';
+        // Position sidebar outside container's right edge
+        wrapperEl.style.left = (containerOffsetLeft + containerWidth + effectiveGap) + 'px';
       } else {
         sidebarEl.style.transform = 'translateX(-100%)';
-        // Position sidebar outside parent container's left edge
-        wrapperEl.style.left = (parentOffsetLeft - effectiveGap) + 'px';
+        // Position sidebar outside container's left edge
+        wrapperEl.style.left = (containerOffsetLeft - effectiveGap) + 'px';
       }
     }
   }
