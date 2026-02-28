@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.3.6] - 2026-03-01
+
+### Fixed
+- Fix sidebar not displaying on .md file viewer pages
+- Differentiate container selection between repo home pages and .md file pages
+- Use markdown-body directly as container for .md file pages
+- Use markdown-body's parent as container for repo home pages
+
 ## [1.3.5] - 2026-02-28
 
 ### Fixed
