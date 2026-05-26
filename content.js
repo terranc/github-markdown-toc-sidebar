@@ -291,7 +291,7 @@
     return true;
   }
 
-  const TIER_FULL = 260;
+  const TIER_FULL = 240;
   const TIER_NARROW = 160;
 
   function applyResponsiveTier(sidebar, availableWidth) {
@@ -299,14 +299,20 @@
 
     if (availableWidth < TIER_NARROW) {
       sidebar.classList.add('gmtoc-mini-fab');
+      sidebar.style.width = '';
       return;
     }
 
     if (availableWidth < TIER_FULL) {
       sidebar.classList.add('gmtoc-narrow');
-      sidebar.style.width = Math.max(160, Math.min(availableWidth, 259)) + 'px';
+      sidebar.style.width = Math.max(160, Math.min(availableWidth, 239)) + 'px';
     } else {
-      sidebar.style.width = Math.max(200, Math.min(availableWidth, 320)) + 'px';
+      // In full mode, only clamp if current width exceeds available space.
+      // Don't override content-based width set by adjustSidebarWidthToContent().
+      const current = parseInt(sidebar.style.width, 10) || 240;
+      if (current > availableWidth) {
+        sidebar.style.width = Math.min(availableWidth, 320) + 'px';
+      }
     }
 
     const btn = sidebar.querySelector('.gmtoc-btn-collapse');
@@ -377,8 +383,10 @@
     }
 
     if (sidebarEl.classList.contains('gmtoc-mini-fab')) {
-      wrapperEl.style.left = 'auto';
-      wrapperEl.style.right = '12px';
+      // Position the mini FAB icon at the right edge of the content area
+      const containerRightOffset = containerRect.right - hostRect.left;
+      wrapperEl.style.left = (containerRightOffset - 44) + 'px';
+      wrapperEl.style.right = 'auto';
     } else {
       wrapperEl.style.right = 'auto';
 
@@ -530,6 +538,10 @@
       wrapperEl.remove();
       wrapperEl = null;
     }
+    if (_measureEl) {
+      _measureEl.remove();
+      _measureEl = null;
+    }
     sidebarEl = null;
     bodyEl = null;
     currentMdBody = null;
@@ -566,6 +578,11 @@
     if (btn) btn.innerHTML = settings.collapsed ? ICONS.expand : ICONS.collapse;
 
     chrome.storage.sync.set({ [STORAGE_KEY_COLLAPSED]: settings.collapsed });
+
+    // Restore content-based width when un-collapsing
+    if (!settings.collapsed) {
+      adjustSidebarWidthToContent();
+    }
 
     // Recalculate position after CSS layout update (width changes from full to 32px when collapsed)
     requestAnimationFrame(() => positionSidebar());
@@ -663,6 +680,49 @@
 
       modalBodyEl.appendChild(item);
     });
+  }
+
+  /* ------------------------------------------------------------------ */
+  /*  Content-based sidebar width                                        */
+  /* ------------------------------------------------------------------ */
+  let _measureEl = null;
+
+  function getMeasureElement() {
+    if (_measureEl && _measureEl.isConnected) return _measureEl;
+    _measureEl = document.createElement('div');
+    _measureEl.style.cssText = 'position:absolute;top:-9999px;left:-9999px;visibility:hidden;white-space:nowrap;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans",Helvetica,Arial,sans-serif;font-size:13px;padding:4px 12px;box-sizing:border-box;';
+    document.body.appendChild(_measureEl);
+    return _measureEl;
+  }
+
+  /**
+   * Measure the longest TOC item text and set sidebar width accordingly.
+   * Width is clamped between 240px (default) and 320px (max).
+   */
+  function adjustSidebarWidthToContent() {
+    if (!sidebarEl || !bodyEl) return;
+    if (sidebarEl.classList.contains('gmtoc-mini-fab')) return;
+    if (sidebarEl.classList.contains('gmtoc-collapsed')) {
+      sidebarEl.style.width = '240px';
+      return;
+    }
+
+    const items = bodyEl.querySelectorAll('.gmtoc-item');
+    if (items.length === 0) return;
+
+    const measureEl = getMeasureElement();
+    let maxWidth = 0;
+
+    items.forEach((item) => {
+      measureEl.textContent = item.textContent;
+      const w = measureEl.getBoundingClientRect().width;
+      if (w > maxWidth) maxWidth = w;
+    });
+
+    // maxWidth = text + 24px padding (12px each side). Add 2px left border.
+    const needed = Math.ceil(maxWidth) + 26;
+    const width = Math.max(240, Math.min(needed, 320));
+    sidebarEl.style.width = width + 'px';
   }
 
   /* ------------------------------------------------------------------ */
@@ -804,6 +864,7 @@
     currentMdBody = mdBody;
     createSidebar();
     renderTOC(headers);
+    adjustSidebarWidthToContent();
     applySidebarZIndex();
     setupObserver(headers);
     positionSidebar();
@@ -894,6 +955,7 @@
         sidebarEl.classList.toggle('gmtoc-collapsed', settings.collapsed);
         const btn = sidebarEl.querySelector('.gmtoc-btn-collapse');
         if (btn) btn.innerHTML = settings.collapsed ? ICONS.expand : ICONS.collapse;
+        if (!settings.collapsed) adjustSidebarWidthToContent();
       }
     }
 

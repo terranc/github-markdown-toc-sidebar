@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.3.7] - 2026-05-26
+
+### Fixed
+- Sidebar width now adapts to TOC content (240-320px range)
+- Mini FAB icon positioned at content container's right edge
+
+### Added
+- Content-based sidebar width measurement
+
 ## [1.3.6] - 2026-03-01
 
 ### Fixed
